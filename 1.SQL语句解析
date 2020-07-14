@@ -1,0 +1,23 @@
+1、数据库介绍
+常用数据库管理系统：
+关系型数据库：Oracle、Microsoft SQL Server、MySQL/MariaDB
+非关系型数据库：MongoDB Memcached Redis
+
+非关系型数据库种类：键值存储数据库、列存储数据库、面向文档数据库、图形数据库
+
+
+2、安装MySQL
+
+准备一台服务器：
+hostnamectl --static set-hostname mysql           ##更改主机名为SQL
+cat /etc/redhat-release                           ##查看系统版本
+uname -a                                          ##查看内核版本
+wget #下载地址
+yum install -y #下载的内容
+yum -y install yum-utils                          ##yum管理包
+yum repolist all|grep mysql                       ##列出所有版本
+yum-config-manager --disable mysql80-community    ##禁用8.0版本
+yum-config-manager --enable  mysql57-community    ##启用5.7版本
+yum repolist enabled | grep mysql                 ##检查启用版本
+yum -y install mysql-community-server mysql       ##安装服务端
+
