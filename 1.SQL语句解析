@@ -19,5 +19,9 @@ yum repolist all|grep mysql                       ##列出所有版本
 yum-config-manager --disable mysql80-community    ##禁用8.0版本
 yum-config-manager --enable  mysql57-community    ##启用5.7版本
 yum repolist enabled | grep mysql                 ##检查启用版本
-yum -y install mysql-community-server mysql       ##安装服务端
+yum -y install mysql-community-server mysql       ##安装服务端、客户端
+systemctl start mysqld
+systemctl enable mysqld
+ls /var/lib/mysql
+grep 
 
