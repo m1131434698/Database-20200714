@@ -1,0 +1,78 @@
+1、外键约束
+	外键作用:保证引用完整性,也就是说数据的准确
+		1.外键一定要指向主键
+		2.外键列的类型一定要和参照的主键的类型一致;
+    
+alter table 表 add [CONSTRAINT 外键名] foreign key(字段) references 表(字段);        ##添加外键
+alter table 表名 drop foreign key 外键约束名                                         ##删除外键
+
+实例：
+CREATE DATABASE test;
+USE test;
+CREATE TABLE grade (
+id INT(4) NOT NULL PRIMARY KEY,
+name varchar(36)
+);
+CREATE TABLE student(
+sid INT(4) NOT NULL PRIMARY KEY,
+sname VARCHAR(36),
+gid INT(4) NOT NULL
+);
+ALTER TABLE student ADD CONSTRAINT FK_ID FOREIGN KEY (gid) REFERENCES grade(id);    ##为student表添加外键约束
+SHOW CREATE ABLE student                                                            ##查看FK_ID外键是否创建成功，如果未出现结果，
+                                                                                    ##需要先将 grade 表和 student 的 engine 改为 InnoDB
+                                                                                    ##命令为：ALTER TABLE grade ENGINE=InnoDB;ALTER TABLE student ENGINE=InnoDB;
+ALTER TABLE student DROP FOREIGN KEY FK_ID;                                         ##删除外键约束
+SHOW CREATE TABLE student;                                                          ##查看外键约束
+ALTER TABLE student ADD CONSTRAINT FK_ID FOREIGN KEY(gid) REFERENCES grade (id);    ##在表grade和表student中添加约束来建立两个表的关联关系：
+INSERT INTO grade(id,name) VALUES (1,'软件一班'),(2,'软件二班');                      ##此处若出现“1366错误”，可先执行如下命令：
+ALTER TABLE grade CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci ; 
+INSERT INTO student (sid,sname,gid) VALUES (1,'王红',1),(2,'李强',1),(3,'赵四',2),(4,'郝娟',2);
+##删除数据：因为grade表和student表具有关联关系，
+##而参照列的被参照值是不能被删除的，
+##所以若想删除grade表中的软件一班，
+##必须先删除student表中软件一班对应的所有学生。
+
+
+
+2、多表的关系
+一对多：在多的一方创建一个字段作为外键，指向一的一方主键
+多对多：新建一张第三方表，至少包含两个字段，都作为外键，分别指向各自的主键
+一对一：先当做一对多，在外键字段添加唯一约束。
+
+3、多表查询
+3.1.交叉查询
+	若干表没有条件的连接在一起
+  select a.*,b.* from a,b;
+  select *from a,b;
+
+3.2.内连接查询
+3.2.1 隐式内连接
+  select a.*,b.* from a,b where 连接条件
+  select * from a, b where 连接条件
+3.2.2 显示内连接
+  select a.*,b.* from a [inner] join b on 连接条件
+  select * from a [inner] join b on 连接条件 where 其它条件
+  
+  
+3.3外连接
+3.3.1 左外连接
+	以join左边的表为主表,展示主表的所有数据,根据条件查询连接右边表的数据,若满足条件则展示,若不满足则以null显示
+  select a.*,b.* from a left [outer] join b on 条件
+  select *from a表 left [outer] join b表 on 条件
+3.3.2 右外连接
+	以join右边的表为主表,展示它的所有数据,根据条件查询join左边表的数据,若满足则展示,若不满足则以null显示
+  select a.*,b.* from a right [outer] join b on 条件
+  select *from 表a right [outer] join 表b on 条件
+
+3.4 子查询
+SELECT * FROM department WHERE id IN (SELECT did FROM  employee WHERE age=20);          ##IN  查询年龄为20岁的员工的部门
+SELECT * FROM department WHERE did NOT IN  (SELECT did WHERE age=20);                   ##IN  查询不存在年龄为20岁的员工的部门
+SELECT * FROM department WHERE did >ANY (SELECT did FROM employee);                     ##ANY 关键字表示只要满足内层子查询中的任意一个条件，就返回一个结果作为外层查询条件
+SELECT * FROM department WHERE did > ALL (SELECT did FROM employee);                    ##ALL 关键字的子查询返回的结果需要同时满足所有内查询条件
+SELECT did,name FROM department WHERE did = (SELECT did FROM employee WHERE name='赵四');
+
+
+3.5 分页查询
+limit a,b;            ##a:从哪个下标开始查(从0开始计数的) 
+                      ##b:查询多少个数据，一页显示数据的数量
