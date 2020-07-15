@@ -1,0 +1,93 @@
+1、数据定义语言DDL
+Data Definition Language
+
+show database;                                                ##查看所有数据库
+show tables;                                                  ##查看所有表
+drop database db1;                                            ##删除数据库
+create database db1 default character set utf8;               ##创建数据库
+use database;                                                 ##选择数据库
+create table t1(id int(3),name varchar(20));                  ##创建表
+desc t1                                                       ##查看表结构
+insert into t1 values(1,'user1');                             ##插入数据
+select * from t1;                                             ##查看表数据
+alter table t1 add(age int(3));                               ##添加表字段语句
+alter table t1 drop id;                                       ##删除表字段语句
+alter table t1 modify age varchar(2);                         ##修改表字段类型格式
+alter table t1 change age plage int(3);                       ##修改表字段名称
+alter table t1 rname per;                                     ##修改表名
+truncate table t1;                                            ##清空表数据
+drop table t1;                                                ##删除表
+
+2、数据操纵语言DML
+insert 
+delete
+update
+where
+
+实例1：创建一个表
+create table student01(id int,name varchar(20),birth date,address varchar(50));
+实例2：插入数据
+insert into student01 values (100,'jack',null,'shanghai');
+insert into student01(id,name,address) values(101,'rose','beijing'),(103,'tim','guangzhou'),(104,'smith','tianjing');
+实例3：删除数据
+delete from student01 where id=103;
+delete from student01 where id=101 and address='beijing';
+实例4：更新数据
+update student01 set address='china' where id=104;
+
+3、事物控制语言TCL
+Transation Control Language
+
+start transaction 
+savepoint 
+DML
+commit/rollback
+
+4、数据查询语言DQL
+Data Query Language
+
+SELECT select_list 
+[INTO new_table_name] 
+[FROM table_source] 
+[WHERE search_condition] 
+[GROUP BY group_by_expression] 
+[HAVING search_condition] 
+[ORDER BY order_expression [ASC | DESC]]
+
+简单查询
+select name,age,sex from student01;
+模糊查询
+select * from student01 where name like '%a%';
+去重
+select distinct sex from student01;
+分组查询
+select deptid,avg(sal) as average from student01 group by deptid;     ##按部门分组查询各组的平均工资
+分组查询添加条件
+select deptid,avg(sal) as average from student01 group by deptid having avg(sal)>2000;    ##按部门分组查询各组的平均工资其中大于2000的
+排序
+select * from student01 order by id DESC;#降序
+select * from student01 order by id ASC;#升序
+
+
+高级关联查询：
+##查询表中各部门人员中大于部门平均工资的人
+select name,sal,a.deptid,b.average
+from student01 a,
+(select deptid,avg(ifnull(sal,0)) as average from student01 group by deptid) b
+where a.deptid=b.deptid and a.sal>b.average
+order by deptid ASC;
+
+5、数据控制语言DCL
+Data Control Language
+
+create user username@ip identified by newPwd;                         ##创建用户
+create user 'stu02'@'192.168.152.166' identified by 'Stu.123456';
+show grants for 'stu02'@'192.168.152.166';                            ##查询权限
+grant 权限1,权限2,…… on 数据库名.* to username@ip;
+grant select,insert,drop on *.* to 'stu02'@'192.168.152.166';         ##授权
+flush privilege
+DML权限：insert delete update
+DQL权限：select 
+DDL权限：create alter drop……
+revoke drop on *.* to 'stu02'@'192.168.152.166';                      ##撤销授权
+drop user 'stu02'@'192.168.152.166';                                  ##删除用户
