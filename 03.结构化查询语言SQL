@@ -15,8 +15,9 @@ alter table t1 drop id;                                       ##删除表字段�
 alter table t1 modify age varchar(2);                         ##修改表字段类型格式
 alter table t1 change age plage int(3);                       ##修改表字段名称
 alter table t1 rname per;                                     ##修改表名
-truncate table t1;                                            ##清空表数据
+truncate table t1;                                            ##清空表数据，自增数值清空
 drop table t1;                                                ##删除表
+create table t2 like t1;                                      ##复制表结构
 
 2、数据操纵语言DML
 insert 
@@ -79,12 +80,12 @@ select * from student01 where name like '%a%';
 去重
 select distinct sex from student01;
 分组查询
-select deptid,avg(sal) as average from student01 group by deptid;     ##按部门分组查询各组的平均工资
+select deptid,avg(sal) as average from student01 group by deptid;                         ##按部门分组查询各组的平均工资
 分组查询添加条件
 select deptid,avg(sal) as average from student01 group by deptid having avg(sal)>2000;    ##按部门分组查询各组的平均工资其中大于2000的
 排序
-select * from student01 order by id DESC;#降序
-select * from student01 order by id ASC;#升序
+select * from student01 order by id DESC;   #降序
+select * from student01 order by id ASC;    #升序
 
 
 高级关联查询：
@@ -109,3 +110,12 @@ DQL权限：select
 DDL权限：create alter drop……
 revoke drop on *.* to 'stu02'@'192.168.152.166';                      ##撤销授权
 drop user 'stu02'@'192.168.152.166';                                  ##删除用户
+
+
+
+6、多表操作
+constraint 外键名 foreign key (被约束的字段) references 约束的表(约束的字段)
+
+
+7、数据库导入导出
+
