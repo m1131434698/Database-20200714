@@ -25,7 +25,25 @@ update
 where
 
 实例1：创建一个表
-create table student01(id int,name varchar(20),birth date,address varchar(50));
+create table student01(
+id int,
+name varchar(20),
+birth date,
+address varchar(50)
+);
+语法
+create table 表名(
+  字段名 列类型 [可选参数]，
+  字段名 列类型 [可选参数]，
+  字段名 列类型 [可选参数]
+)charset=utf8;
+
+列约束
+·auto_increment 自增1
+·primary key 主键索引，加快查询速度，列的值不能重复
+·NOT NULL 标识该字段不能空
+·DEFAULT 为该字段设置默认值
+
 实例2：插入数据
 insert into student01 values (100,'jack',null,'shanghai');
 insert into student01(id,name,address) values(101,'rose','beijing'),(103,'tim','guangzhou'),(104,'smith','tianjing');
